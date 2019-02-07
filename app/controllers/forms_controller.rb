@@ -7,12 +7,12 @@ class FormsController < ApplicationController
   def index
     @forms = Form.all
 
-    render json: @forms, include: :scores
+    render json: @forms, include: :scores, methods: :total_points
   end
 
   # GET /forms/1
   def show
-    render json: @form
+    render json: @form, include: { scores: { include: :event } }, methods: [:rank, :year_rank, :total_points]
   end
 
   private
