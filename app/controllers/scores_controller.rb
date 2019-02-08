@@ -24,7 +24,7 @@ class ScoresController < ApplicationController
       if @score
         @score.update!(create_params.merge(token: @token))
       else
-        @score.create!(create_params.merge(token: @token))
+        @score = Score.create!(create_params.merge(token: @token))
       end
 
       render json: @score, include: %i[form event]
