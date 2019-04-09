@@ -7,17 +7,17 @@ class FormsController < ApplicationController
   def index
     @forms = Form.all
 
-    render json: @forms, include: :scores, methods: [:total_points, :rank, :year_rank]
+    render json: @forms, include: [:scores, :records], methods: [:total_points, :rank, :year_rank]
   end
 
   # GET /forms/1
   def show
-    render json: @form, include: { scores: { include: :event, methods: :rank } }, methods: [:rank, :year_rank, :total_points]
+    render json: @form, include: [{ records: { include: :event } }, { scores: { include: :event, methods: :rank } }], methods: [:rank, :year_rank, :total_points]
   end
 
   def year_forms
     @forms = Form.where(year: params[:year_group])
-    render json: @forms
+    render json: @forms, include: :records
   end
 
   private

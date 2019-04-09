@@ -5,14 +5,14 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @events = Event.all
+    @events = Event.all.order("id asc")
 
-    render json: @events
+    render json: @events, include: [ records: { include: :form } ]
   end
 
   # GET /events/1
   def show
-    render json: @event, include: { scores: { include: :form, methods: :rank } }
+    render json: @event, include: [ { records: { include: :form } }, { scores: { include: :form, methods: :rank } }]
   end
 
   private

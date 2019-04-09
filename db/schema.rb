@@ -10,16 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_09_194038) do
+ActiveRecord::Schema.define(version: 2019_04_07_212015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "allocations", force: :cascade do |t|
+    t.time "starts_at"
+    t.bigint "event_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "competitor"
+    t.integer "year_group"
+    t.string "location"
+    t.index ["event_id"], name: "index_allocations_on_event_id"
+  end
 
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.integer "competitors"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "score_units"
+    t.string "world_record"
+    t.string "world_record_holder"
   end
 
   create_table "forms", force: :cascade do |t|
@@ -44,6 +58,23 @@ ActiveRecord::Schema.define(version: 2019_02_09_194038) do
     t.index ["renew_after"], name: "index_letsencrypt_certificates_on_renew_after"
   end
 
+  create_table "records", force: :cascade do |t|
+    t.float "score"
+    t.string "units"
+    t.string "holder"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "current_record"
+    t.bigint "form_id"
+    t.string "past_form"
+    t.integer "past_year_group"
+    t.bigint "event_id"
+    t.string "competitor"
+    t.index ["event_id"], name: "index_records_on_event_id"
+    t.index ["form_id"], name: "index_records_on_form_id"
+  end
+
   create_table "scores", force: :cascade do |t|
     t.bigint "event_id"
     t.bigint "form_id"
@@ -64,6 +95,8 @@ ActiveRecord::Schema.define(version: 2019_02_09_194038) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "allocations", "events"
+  add_foreign_key "records", "events"
   add_foreign_key "scores", "events"
   add_foreign_key "scores", "forms"
   add_foreign_key "scores", "tokens"

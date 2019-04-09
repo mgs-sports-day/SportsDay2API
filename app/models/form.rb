@@ -2,6 +2,7 @@
 
 class Form < ApplicationRecord
   has_many :scores
+  has_many :records
 
   def rank
     @rank = Form

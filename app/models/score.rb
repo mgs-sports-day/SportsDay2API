@@ -9,6 +9,7 @@ class Score < ApplicationRecord
             .joins(:event)
             .where('forms.year = ?', self.form.year)
             .where('events.id = ?', self.event.id)
+            .where('competitor = ?', self.competitor)
             .group('scores.id')
             .order('sum(scores.score) DESC')
             .map(&:id)
